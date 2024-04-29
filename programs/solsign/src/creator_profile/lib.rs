@@ -15,7 +15,7 @@ pub struct CreatorProfile {
 /// Create or Edit creator account
 #[derive(Accounts)]
 pub struct CreateCreator<'info> {
-    #[account(init, payer = user, seeds=[b"CREATOR", user.key().as_ref()], bump, space = CreatorProfile::INIT_SPACE)]
+    #[account(init, payer = user, seeds=[b"CREATOR", user.key().as_ref()], bump, space = 8 + CreatorProfile::INIT_SPACE)]
     pub creator: Account<'info, CreatorProfile>,
     #[account(mut)]
     pub user: Signer<'info>,

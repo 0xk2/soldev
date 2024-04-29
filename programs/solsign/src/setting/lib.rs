@@ -44,7 +44,7 @@ pub fn run_collect_fee(_ctx: Context<CollectFee>) -> Result<()> {
 /// Initialize the program
 #[derive(Accounts)]
 pub struct InitSetting<'info> {
-  #[account(init, payer = user, seeds=[b"SETTING"], bump, space = Setting::INIT_SPACE)]
+  #[account(init, payer = user, seeds=[b"SETTING"], bump, space = 8 + Setting::INIT_SPACE)]
   pub setting: Account<'info, Setting>,
   #[account(mut)]
   pub user: Signer<'info>,

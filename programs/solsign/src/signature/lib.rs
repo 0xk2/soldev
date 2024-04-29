@@ -51,7 +51,7 @@ impl Signature {
       signature.to_account_info(),
       &seeds,
       bump,
-      Signature::INIT_SPACE,
+      8 + Signature::INIT_SPACE,
       &solsign_program.key(),
     )?;
 

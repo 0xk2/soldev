@@ -59,14 +59,14 @@ pub struct GameConfig {
 }
 
 // ----------- STATUS ----------
-const IS_FROZEN_FLAG: u8 = 1 << 0;
-const IS_POISONED_FLAG: u8 = 1 << 1;
-const IS_BURNING_FLAG: u8 = 1 << 2;
-const IS_BLESSED_FLAG: u8 = 1 << 3;
-const IS_CURSED_FLAG: u8 = 1 << 4;
-const IS_STUNNED_FLAG: u8 = 1 << 5;
-const IS_SLOWED_FLAG: u8 = 1 << 6;
-const IS_BLEEDING_FLAG: u8 = 1 << 7;
+// const IS_FROZEN_FLAG: u8 = 1 << 0;
+// const IS_POISONED_FLAG: u8 = 1 << 1;
+// const IS_BURNING_FLAG: u8 = 1 << 2;
+// const IS_BLESSED_FLAG: u8 = 1 << 3;
+// const IS_CURSED_FLAG: u8 = 1 << 4;
+// const IS_STUNNED_FLAG: u8 = 1 << 5;
+// const IS_SLOWED_FLAG: u8 = 1 << 6;
+// const IS_BLEEDING_FLAG: u8 = 1 << 7;
 const NO_EFFECT_FLAG: u8 = 0b00000000;
 
 // ----------- INVENTORY ----------

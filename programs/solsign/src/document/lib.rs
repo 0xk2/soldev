@@ -20,7 +20,7 @@ pub struct CreateDocument<'info> {
     payer = user, 
     seeds=[b"DOCUMENT", user.key().as_ref(), creator.max.to_le_bytes().as_ref()], 
     bump, 
-    space = Document::INIT_SPACE
+    space = 8 + Document::INIT_SPACE
   )]
   pub document: Account<'info, Document>,
   #[account(mut)]
