@@ -44,53 +44,6 @@ describe('solsign - Onchain DocuSign', () => {
       [wallet]
     );
   });
-  it('Testing cfg && program data', async () => {
-    const [cfgPDA, b1] = anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from('CfgAcc')],
-      program.programId
-    );
-    console.log('Cfg PDA', cfgPDA.toBase58());
-    await program.methods
-      .checkLang()
-      .accounts({
-        acc: cfgPDA,
-        user: wallet.publicKey,
-        systemProgram: systemProgram.programId,
-      })
-      .signers([wallet])
-      .rpc();
-    console.log('Check lang done');
-    try {
-      const cfgInfo = await program.account.cfgAcc.fetch(cfgPDA);
-      console.log('Cfg account', cfgInfo);
-    } catch (err) {
-      console.log('No cfg account found');
-    }
-    console.log('Program ID', program.programId.toBase58());
-    const [programData, b2] = anchor.web3.PublicKey.findProgramAddressSync(
-      [program.programId.toBytes()],
-      new anchor.web3.PublicKey('BPFLoaderUpgradeab1e11111111111111111111111')
-    );
-    console.log('Program data', programData.toBase58());
-    try {
-      program.provider.connection
-        .getAccountInfo(program.programId)
-        .then((data) => {
-          console.log('read : ', program.programId.toBase58());
-          const raw = data.data;
-          console.log('decode data: ', Buffer.from(raw).toString('hex'));
-        });
-      // TODO: fetch a custom PDA
-      program.provider.connection.getAccountInfo(programData).then((data) => {
-        console.log('read : ', programData.toBase58());
-        console.log('got: ', data);
-      });
-      // const programInfo = await program.account.programData.fetch(programData);
-      // console.log('Program data', programInfo);
-    } catch (err) {
-      console.log('No program data found');
-    }
-  });
   it('Owner can change fee!', async () => {
     await program.methods
       .changeFee(new anchor.BN(100))

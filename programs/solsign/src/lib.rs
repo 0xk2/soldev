@@ -10,41 +10,12 @@ use creator_profile::*;
 use document::*;
 use signature::*;
 
-#[cfg(feature = "lang")]
-#[constant]
-pub const WELCOME_STRING:&str = "Support multiple language!";
-
-#[cfg(not(feature = "lang"))]
-#[constant]
-pub const WELCOME_STRING:&str = "Does not support multiple language!";
-
-#[account]
-#[derive(InitSpace)]
-pub struct CfgAcc {
-	#[max_len(200)]
-	pub value: String,
-}
-
-#[derive(Accounts)]
-pub struct CfgContext<'info> {
-	#[account(init, payer = user, seeds=[b"CfgAcc"], bump, space = 8 + CfgAcc::INIT_SPACE)]
-	pub acc: Account<'info, CfgAcc>,
-	#[account(mut)]
-	pub user: Signer<'info>,
-	pub system_program: Program<'info, System>
-}
-
 declare_id!("EeLs6B1EFQSGaivXCgQj9J2M9eDGBzaaCicFomxZgpAK");
 
 #[program]
 pub mod solsign {
 
 	use super::*;
-
-	pub fn check_lang(ctx: Context<CfgContext>) -> Result<()> {
-		ctx.accounts.acc.value = WELCOME_STRING.to_string();
-		Ok(())
-	}
 
 	pub fn initialize(ctx: Context<InitSetting>, fee: u64, fee_collector: Pubkey) -> Result<()> {
 		run_initialize(ctx, fee, fee_collector)?;
