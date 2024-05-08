@@ -32,6 +32,11 @@ pub mod solsign {
 		Ok(())
 	}
 
+	pub fn change_owner (ctx: Context<MutSetting>, owner: Pubkey) -> Result<()> {
+		run_change_owner(ctx, owner)?;
+		Ok(())
+	}
+
 	pub fn create_creator(ctx: Context<CreateCreator>, uri: String) -> Result<()> {
 		run_create_creator(ctx, uri)?;
 		Ok(())
@@ -54,6 +59,11 @@ pub mod solsign {
 
 	pub fn anull_document(ctx: Context<MutDocument>) -> Result<()> {
 		run_anull_document(ctx)?;
+		Ok(())
+	}
+
+	pub fn activate_document(ctx: Context<MutDocument>) -> Result<()> {
+		run_activate_document(ctx)?;
 		Ok(())
 	}
 

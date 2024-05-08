@@ -86,6 +86,7 @@ describe('soldev', () => {
       // });
 
       // let's fetch cfgPDA and deserialized using CustomAccountSchema
+
       program.provider.connection.getAccountInfo(cfgPDA).then((data) => {
         // 213 = 8 + 4 + 200 + 1
         // 8 is the discriminator, 4 is the length of string, content up to 200, and 1 is the u8
@@ -107,11 +108,12 @@ describe('soldev', () => {
             'discriminator: ',
             discriminator
           );
+          console.log('length: ', value.length);
         } catch (e) {
           console.log('buffer error 1: ', e);
         }
         try {
-          const { slot } = Custom3AccountSchema.decode(data.data, 8 + 4 + 26);
+          const { slot } = Custom3AccountSchema.decode(data.data, 8 + 4 + 35);
           console.log('* Cfg PDA3 * decode : slot: "', slot, '"');
         } catch (e) {
           console.log('buffer error 3: ', e);

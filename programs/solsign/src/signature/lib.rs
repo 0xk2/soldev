@@ -78,14 +78,16 @@ pub struct SignDocument<'info> {
   pub system_program: Program<'info, System>,
 }
 pub fn run_sign_document(ctx: Context<SignDocument>, value: u8) -> Result<()> {
+  // CHECK document status
   if ctx.accounts.document.status == 0 {
-    return err!(SolSignError::DocumentNotPublished);
+    return err!(SolSignError::DocumentNotActivated);
   }
   if ctx.accounts.document.status == 2 {
     return err!(SolSignError::DocumentAnulled);
   }
-  if ctx.accounts.signature.status == 3 {
-    return err!(SolSignError::DocumentFinished);
+  // CHECK signature Status
+  if ctx.accounts.signature.status != 0 {
+    return err!(SolSignError::SignatureAlreadySigned);
   }
   ctx.accounts.signature.status = value;
   Ok(())

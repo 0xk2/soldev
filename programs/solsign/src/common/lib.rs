@@ -7,16 +7,20 @@ use std::io::{self, Write};
 ///---Errors---///
 #[error_code]
 pub enum SolSignError {
-  #[msg("Document is already published")]
-  DocumentAlreadyPublished,
-  #[msg("Document is not published yet")]
-  DocumentNotPublished,
+  #[msg("Document is already activated")]
+  DocumentAlreadyActivated,
+  #[msg("Document is not activated yet")]
+  DocumentNotActivated,
   #[msg("Document is anulled")]
   DocumentAnulled,
-  #[msg("Signing process is finished")]
-  DocumentFinished,
+	#[msg("Document cannot activate")]
+	DocumentNotAbleAcitvate,
   #[msg("Unauthorized")]
   Unauthorized,
+	#[msg("Too many signers")]
+	TooManySigners,
+	#[msg("Signature already signed")]
+	SignatureAlreadySigned,
 }
 
 /// Helper ///
