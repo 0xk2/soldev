@@ -3,11 +3,11 @@ import config from '../config';
 
 const listDocumentBySigner = async (
   signer: anchor.web3.PublicKey,
-  from = 0,
+  offset = 0,
   size = 10
 ) => {
   const program = config.getProgram();
-  const accounts = program.provider.connection.getProgramAccounts(
+  const accounts = await program.provider.connection.getProgramAccounts(
     program.programId,
     {
       dataSlice: { offset: 0, length: 0 },
@@ -21,7 +21,22 @@ const listDocumentBySigner = async (
       ],
     }
   );
-  return accounts;
+  const data = [];
+  const last =
+    offset + size > accounts.length ? accounts.length : offset + size;
+  for (var i = offset; i < last; i++) {
+    const sgn = await program.account.signature.fetch(accounts[i].pubkey);
+    data.push({ ...sgn, publicKey: accounts[i].pubkey.toBase58() });
+  }
+  const result = {
+    pagination: {
+      offset,
+      size,
+      total: accounts.length,
+    },
+    data: data,
+  };
+  return result;
 };
 
 export default listDocumentBySigner;

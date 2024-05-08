@@ -5,7 +5,7 @@ import STATUS from '../state/document_status';
 
 const _sign = async (
   signer: anchor.web3.PublicKey,
-  document: anchor.web3.PublicKey,
+  documentPDA: anchor.web3.PublicKey,
   decision: number
 ) => {
   const program = config.getProgram();
@@ -13,16 +13,16 @@ const _sign = async (
   let doc, signature;
   // check if the document exists
   try {
-    doc = await program.account.document.fetch(document);
+    doc = await program.account.document.fetch(documentPDA);
   } catch (e) {
     throw new Error('Document not found');
   }
-  if ((doc.status as anchor.BN).toNumber() !== STATUS.PENDING) {
+  if (doc.status !== STATUS.ACTIVATED) {
     throw new Error('Document is either in PENDING or ANNUL state');
   }
   // get signature PDA
   const [signaturePDA] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from('SIGNATURE'), document.toBuffer(), signer.toBuffer()],
+    [Buffer.from('SIGNATURE'), documentPDA.toBuffer(), signer.toBuffer()],
     program.programId
   );
   try {
@@ -30,17 +30,14 @@ const _sign = async (
   } catch (e) {
     throw new Error('Signature NOT existed, document is in malformed state');
   }
-  if ((signature.status as anchor.BN).toNumber() === SIGSTAT.PENDING) {
+  if (signature.status === SIGSTAT.PENDING) {
   } else {
-    let msg =
-      (signature.status as anchor.BN).toNumber() === SIGSTAT.APPROVED
-        ? 'approved'
-        : 'rejected';
+    let msg = signature.status === SIGSTAT.APPROVED ? 'approved' : 'rejected';
     throw new Error('Signature is already signed as ' + msg);
   }
   let ix = program.instruction.signDocument(decision, {
     accounts: {
-      document,
+      document: documentPDA,
       signature: signaturePDA,
       user: signer,
       systemProgram: anchor.web3.SystemProgram.programId,

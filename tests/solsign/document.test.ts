@@ -8,12 +8,12 @@ describe('Document test', () => {
   sdk.setConfig({
     provider: anchor.getProvider(),
   });
-  const wallet = anchor.workspace.Solsign.provider.wallet;
+  const wallet = anchor.workspace.Solsign.provider.wallet
+    .payer as anchor.web3.Keypair;
   const keypair2 = loadKeypairFromFile('./tests/solsign/lib/wallet2.json');
   const signer1 = anchor.web3.Keypair.generate();
   const signer2 = anchor.web3.Keypair.generate();
-  const not_a_signer = anchor.web3.Keypair.generate();
-  const allKps = [keypair2, signer1, signer2, not_a_signer];
+  const allKps = [keypair2, signer1, signer2];
   const document_uri = 'creator_document_uri';
   let documentPDA: anchor.web3.PublicKey;
   let documentInfo;
@@ -33,14 +33,21 @@ describe('Document test', () => {
       txn,
       [keypair2]
     );
+    const fundTxn = new anchor.web3.Transaction();
     // transfer fund to signers
     allKps.forEach(async (kp) => {
-      anchor.web3.SystemProgram.transfer({
+      const ix = anchor.web3.SystemProgram.transfer({
         fromPubkey: wallet.publicKey,
         toPubkey: kp.publicKey,
         lamports: 1_000_000_000, // 1 SOL
       });
+      fundTxn.add(ix);
     });
+    await anchor.web3.sendAndConfirmTransaction(
+      anchor.getProvider().connection,
+      fundTxn,
+      [wallet]
+    );
     // get document info
     documentInfo = await sdk.getDocumentByCreatorIndex(
       keypair2.publicKey,

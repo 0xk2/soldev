@@ -12,6 +12,7 @@ import changeDocumentURI from './instructions/change_document_uri';
 import { activate, annul } from './instructions/change_document_status';
 // sign
 import { approve, reject } from './instructions/sign';
+import getSignature from './state/get_signature';
 // config
 import config from './config';
 // constant
@@ -31,6 +32,7 @@ export default {
   changeDocumentURI,
   approve,
   reject,
+  getSignature,
   activate,
   annul,
   STATUS,

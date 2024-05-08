@@ -2,7 +2,7 @@ import * as anchor from '@coral-xyz/anchor';
 import { Program } from '@coral-xyz/anchor';
 import { Solsign } from '../target/types/solsign';
 import loadKeypairFromFile from './solsign/lib/loadKeypairFromFile';
-
+/// TODO: these tests are for the client/js code, not the anchor program
 describe('Test for solsign', () => {
   anchor.setProvider(anchor.AnchorProvider.env());
   const program = anchor.workspace.Solsign as Program<Solsign>;
@@ -43,7 +43,8 @@ describe('Test for solsign', () => {
     );
     console.log('  ** Setup done! **');
   });
-  // require('./solsign/setting.test');
+  require('./solsign/setting.test');
   require('./solsign/creator_profile.test');
   require('./solsign/document.test');
+  require('./solsign/signature.test');
 });
