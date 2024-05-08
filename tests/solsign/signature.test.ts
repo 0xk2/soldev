@@ -181,6 +181,9 @@ describe('Signature test', () => {
     const sigOf3 = await sdk.listDocumentBySigner(signer3.publicKey);
     const sigOf4 = await sdk.listDocumentBySigner(signer4.publicKey);
     const sigOf5 = await sdk.listDocumentBySigner(signer5.publicKey);
-    console.log(sigOf3);
+
+    assert.strictEqual(sigOf3.data.length, 2);
+    assert.strictEqual(sigOf4.data.length, 3);
+    assert.strictEqual(sigOf5.data.length, 1);
   });
 });

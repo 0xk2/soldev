@@ -10,7 +10,20 @@ const getDocument = async (documentPDA: anchor.web3.PublicKey) => {
   const program = config.getProgram();
   try {
     const document = await program.account.document.fetch(documentPDA);
-    return { ...document, publicKey: documentPDA };
+    const signatures = [];
+    for (var i = 0; i < document.signers.length; i++) {
+      const [signaturePDA] = anchor.web3.PublicKey.findProgramAddressSync(
+        [
+          Buffer.from('SIGNATURE'),
+          documentPDA.toBuffer(),
+          document.signers[i].toBuffer(),
+        ],
+        program.programId
+      );
+      const signature = await program.account.signature.fetch(signaturePDA);
+      signatures.push(signature);
+    }
+    return { ...document, publicKey: documentPDA, signatures };
   } catch (e) {
     throw new Error('Document not found');
   }

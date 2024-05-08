@@ -1,5 +1,7 @@
 import * as anchor from '@coral-xyz/anchor';
 import config from '../config';
+import idl from '../idls/solsign.json';
+import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes';
 
 const listDocumentBySigner = async (
   signer: anchor.web3.PublicKey,
@@ -12,6 +14,15 @@ const listDocumentBySigner = async (
     {
       dataSlice: { offset: 0, length: 0 },
       filters: [
+        {
+          memcmp: {
+            offset: 0,
+            bytes: bs58.encode(
+              idl.accounts.filter((acc) => acc.name === 'Signature')[0]
+                .discriminator
+            ),
+          },
+        },
         {
           memcmp: {
             offset: 8,

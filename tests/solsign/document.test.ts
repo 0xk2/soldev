@@ -56,7 +56,7 @@ describe('Document test', () => {
     documentPDA = documentInfo.publicKey;
     new_max = (await sdk.getProfile(keypair2.publicKey)).max;
   });
-  it('Creator can create document and its status is PENDING', async () => {
+  it('Creator can create document and its status is PENDING & return correct signatures', async () => {
     try {
       assert.strictEqual(
         new_max.eq(new anchor.BN(old_max).add(new anchor.BN(1))),
@@ -67,6 +67,12 @@ describe('Document test', () => {
     } catch (e) {
       assert.fail();
     }
+    const doc = await sdk.getDocument(documentPDA);
+    assert.strictEqual(
+      doc.signatures.length,
+      2,
+      'The number of signature should match'
+    );
   });
   it('Creator can only change document uri and signers if it is PENDING', async () => {
     const new_uri = 'new_uri';
