@@ -6,3 +6,5 @@ node_modules
 test-ledger
 .yarn
 treasury.json
+id.json
+s1g.json

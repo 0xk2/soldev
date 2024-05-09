@@ -6,6 +6,7 @@ import * as anchor from '@coral-xyz/anchor';
 import * as borsh from '@coral-xyz/borsh';
 import { Keypair } from '@solana/web3.js';
 import fs from 'fs';
+import { Solsign } from '../target/types/solsign';
 
 export default function loadKeypairFromFile(filename: string): Keypair {
   const secret = JSON.parse(fs.readFileSync(filename).toString()) as number[];
@@ -18,7 +19,7 @@ module.exports = async function (provider: anchor.Provider) {
   // Configure client to use the provider.
   anchor.setProvider(provider);
   const connection = anchor.getProvider().connection;
-
+  const program = anchor.workspace.Solsign as anchor.Program<Solsign>;
   // Add your deploy script here.
   // Check if the program is deployed on the devnet
 
@@ -33,16 +34,11 @@ module.exports = async function (provider: anchor.Provider) {
   const balance = await provider.connection.getBalance(masterKeyPair.publicKey);
   console.log('💰 Balance is', balance / 1e9, 'SOL');
   // Initialize the program
-  console.log(
-    '🔑  Program ID is: ',
-    anchor.workspace.Solsign.programId.toBase58()
-  );
+  console.log('🔑  Program ID is: ', program.programId.toBase58());
   // Is it existed?
   let shouldContinue = true;
   try {
-    const programAccount = await connection.getAccountInfo(
-      anchor.workspace.Solsign.programId
-    );
+    const programAccount = await connection.getAccountInfo(program.programId);
     console.log(
       "📦  Program account' data length is",
       programAccount.data.length,
@@ -65,11 +61,11 @@ module.exports = async function (provider: anchor.Provider) {
     );
     console.log(
       "🔑 🔑 🔑 Alternatively, we can get the ProgramData account through a PDA of BPFLoaderUpgrdaeable and see is '" +
-        anchor.workspace.Solsign.programId +
+        program.programId +
         "'"
     );
     const [programDataPDA, b2] = anchor.web3.PublicKey.findProgramAddressSync(
-      [anchor.workspace.Solsign.programId.toBytes()],
+      [program.programId.toBytes()],
       new anchor.web3.PublicKey('BPFLoaderUpgradeab1e11111111111111111111111')
     );
     console.log(
@@ -95,8 +91,9 @@ module.exports = async function (provider: anchor.Provider) {
   if (!shouldContinue) {
     return;
   }
+  let treasury;
   try {
-    const treasury = loadKeypairFromFile('./migrations/treasury.json');
+    treasury = loadKeypairFromFile('./migrations/treasury.json');
     console.log('🔑  Treasury is', treasury.publicKey.toBase58());
   } catch (e) {
     console.log('💥 No treasury found');
@@ -106,4 +103,50 @@ module.exports = async function (provider: anchor.Provider) {
     return;
   }
   // Check if the treasury is initialized
+  const [settingPDA, bump] = anchor.web3.PublicKey.findProgramAddressSync(
+    [Buffer.from('SETTING')],
+    program.programId
+  );
+  let settingAccount;
+  try {
+    settingAccount = await program.account.setting.fetch(settingPDA);
+  } catch (e) {
+    console.log("💥 No setting account found, 📦 let' create one.");
+    // build the instruction
+    const ix = program.instruction.initialize(
+      new anchor.BN(1000000),
+      treasury.publicKey,
+      {
+        accounts: {
+          user: masterKeyPair.publicKey,
+          setting: settingPDA,
+          systemProgram: anchor.web3.SystemProgram.programId,
+        },
+      }
+    );
+    const txn = new anchor.web3.Transaction();
+    txn.add(ix);
+    // send the transaction
+    const txid = await anchor.web3.sendAndConfirmTransaction(connection, txn, [
+      masterKeyPair,
+    ]);
+    console.log('📦 Setting account created in txn: ', txid);
+    // fetch the setting account
+    settingAccount = await program.account.setting.fetch(settingPDA);
+  }
+  console.log('🔑  Setting is: ');
+  console.log(
+    '🔑🔑  * Fee: ',
+    (settingAccount.fee as anchor.BN).toNumber(),
+    ' lamports'
+  );
+
+  console.log(
+    '🔑🔑  * Treasury, where money flow to : ',
+    settingAccount.feeCollector.toBase58()
+  );
+  console.log(
+    '🔑🔑  * Owner, who can change setting :',
+    settingAccount.owner.toBase58()
+  );
 };

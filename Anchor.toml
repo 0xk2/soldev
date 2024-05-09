@@ -8,7 +8,7 @@ skip-lint = false
 m6_1 = "2kiLeviDdmqdVkxhJ6uKuZo7SAASoxrCATHmjr5mNMzr"
 rpg = "EwxLgTCGvabH6v1ELhRktRsSYbBUzMEmax9DoUzshJco"
 soldev = "HzDUBzTLp7Zwb8WftkJvbhk67yjBS8uryvpBt1xTVdpe"
-solsign = "EeLs6B1EFQSGaivXCgQj9J2M9eDGBzaaCicFomxZgpAK"
+solsign = "s1g2tZuBvLAdvrvgp7utJ93LKjcjhfbEk5EHHWnF3yQ"
 
 [registry]
 url = "https://api.apr.dev"

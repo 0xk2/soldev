@@ -10,7 +10,7 @@ use creator_profile::*;
 use document::*;
 use signature::*;
 
-declare_id!("EeLs6B1EFQSGaivXCgQj9J2M9eDGBzaaCicFomxZgpAK");
+declare_id!("s1g2tZuBvLAdvrvgp7utJ93LKjcjhfbEk5EHHWnF3yQ");
 
 #[program]
 pub mod solsign {
