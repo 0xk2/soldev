@@ -2,6 +2,10 @@
 // single deploy script that's invoked from the CLI, injecting a provider
 // configured from the workspace's Anchor.toml.
 
+/**
+ * To use this file: anchor migrate --provider-cluster devnet
+ */
+
 import * as anchor from '@coral-xyz/anchor';
 import * as borsh from '@coral-xyz/borsh';
 import { Keypair } from '@solana/web3.js';

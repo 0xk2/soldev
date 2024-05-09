@@ -3,6 +3,10 @@ import * as borsh from '@coral-xyz/borsh';
 import { Keypair } from '@solana/web3.js';
 import fs from 'fs';
 
+/**
+ * To use this file: ts-node ./migrations/custom.ts
+ */
+
 export default function loadKeypairFromFile(filename: string): Keypair {
   const secret = JSON.parse(fs.readFileSync(filename).toString()) as number[];
   const secretKey = Uint8Array.from(secret);
