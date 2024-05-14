@@ -18,14 +18,15 @@ const Manage = () => {
   const profile = useContext(ProfileContext);
 
   const createProfile = () => {
-    console.log('createProfile ', wallet?.publicKey);
+    const uri = prompt('Enter your profile URI');
     setData({
       ...data,
       isLoadingCreateProfile: true,
     });
     const ix = sdk.createProfile(
       wallet?.publicKey,
-      'https://mocki.io/v1/88124758-81cc-4713-98e5-886744352e0a'
+      uri
+      //'https://mocki.io/v1/88124758-81cc-4713-98e5-886744352e0a'
     );
     const txn = new web3.Transaction().add(ix);
     sendTxn(connection, txn, wallet)
