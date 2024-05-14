@@ -1,6 +1,11 @@
-// fetch all documents that need person signature
+import SignatureList from '../components/SignatureList';
+
 const Signatures = () => {
-  return <div>Signatures, damn it!</div>;
+  return (
+    <div>
+      <SignatureList />
+    </div>
+  );
 };
 
 export default Signatures;

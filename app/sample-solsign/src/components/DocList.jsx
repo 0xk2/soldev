@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import ProfileContext from '../context/Profile';
 import sdk from '../sdk';
-import { PublicKey } from '@solana/web3.js';
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
 import sendTxn from '../funcs/sendTxn';
 
@@ -9,7 +8,7 @@ const renderSignatureStatus = (status) => {
   switch (status) {
     case sdk.SIGSTAT.PENDING:
       return '🔔';
-    case sdk.SIGSTAT.SIGNED:
+    case sdk.SIGSTAT.APPROVED:
       return '✅';
     case sdk.SIGSTAT.REJECTED:
       return '❌';
