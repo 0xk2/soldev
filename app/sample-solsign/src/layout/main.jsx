@@ -141,24 +141,16 @@ const Display = ({ children }) => {
       </main>
       <footer className='bg-gray-900 text-white py-4 px-6 flex flex-col items-center justify-between gap-4 md:flex-row md:px-8 lg:px-10'>
         <p className='text-sm' data-id='163'>
-          © 2023 Document Manager. All rights reserved.
+          © 2024 Solsign, an on-chain DocuSign
         </p>
         <div className='flex items-center gap-4' data-id='164'>
           <a
             className='text-sm hover:underline'
             data-id='165'
-            href='#'
+            href='https://github.com/0xk2/soldev'
             rel='ugc'
           >
-            Privacy Policy
-          </a>
-          <a
-            className='text-sm hover:underline'
-            data-id='166'
-            href='#'
-            rel='ugc'
-          >
-            Terms of Service
+            Github
           </a>
         </div>
       </footer>
