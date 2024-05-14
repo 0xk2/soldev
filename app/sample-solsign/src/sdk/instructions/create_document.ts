@@ -15,6 +15,7 @@ const createDocument = async (
     program.programId
   );
   const profileInfo = await getProfile(creator);
+  console.log('profileInfo', profileInfo);
   const [documentPDA] = anchor.web3.PublicKey.findProgramAddressSync(
     [
       Buffer.from('DOCUMENT'),
@@ -23,6 +24,8 @@ const createDocument = async (
     ],
     program.programId
   );
+  console.log('documentPDA', documentPDA.toBase58());
+  console.log('signers: ', signers);
   const signaturesPDA = [];
   for (var i = 0; i < signers.length; i++) {
     const sgn = signers[i];

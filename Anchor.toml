@@ -5,6 +5,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
+fake-program = "3587AJrnBE5N6AgicmvC5ZrMt3a511jN2Ai4Nu78RXs9"
 m6_1 = "2kiLeviDdmqdVkxhJ6uKuZo7SAASoxrCATHmjr5mNMzr"
 rpg = "EwxLgTCGvabH6v1ELhRktRsSYbBUzMEmax9DoUzshJco"
 soldev = "HzDUBzTLp7Zwb8WftkJvbhk67yjBS8uryvpBt1xTVdpe"

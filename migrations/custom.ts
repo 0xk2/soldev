@@ -28,7 +28,7 @@ const custom = async function (provider: anchor.Provider) {
   anchor.setProvider(provider);
   console.log('We invoking this endpoint: ', provider.connection.rpcEndpoint);
   console.log('🔑  Wallet public key is: ', provider.publicKey.toBase58());
-  console.log(genAddress(2, ['k2, K2']));
+  console.log(genAddress(4, ['james', 'James', 'J4m3']));
 };
 
 export const genAddress = (l, prefixs) => {
