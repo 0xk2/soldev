@@ -16,6 +16,7 @@ const Manage = () => {
   });
   const wallet = useAnchorWallet();
   const { connection } = useConnection();
+  // TODO: show loading when profile is being fetched
   const profile = useContext(ProfileContext);
   const [rCounter, setRCounter] = useState(0);
 

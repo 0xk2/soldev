@@ -70,7 +70,16 @@ const Display = ({ children }) => {
     <>
       {cluster === 'devnet' ? (
         <div className='w-ful text-sm bg-yellow-500 text-center text-black font-bold'>
-          Dev net
+          <span className='text-red-500 mr-2'>Dev net</span>
+          <span>
+            <a
+              className='underline'
+              href='https://faucet.solana.com/'
+              target='_blank'
+            >
+              Get gas here
+            </a>
+          </span>
         </div>
       ) : null}
       <header
