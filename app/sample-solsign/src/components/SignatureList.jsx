@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { PublicKey } from '@solana/web3.js';
 import { useSearchParams } from 'react-router-dom';
 import sendTxn from '../funcs/sendTxn';
+import Loading from './Loading';
 
 const renderDocStatus = (status) => {
   console.log('doc status', status);
@@ -41,26 +42,35 @@ const SignatureList = () => {
   const [pagination, setPagination] = useState({});
   const [signatures, setSignatures] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [rCounter, setRCounter] = useState(0);
 
   const agree = async (docPDA) => {
+    setLoading(true);
     sendTxn(connection, await sdk.approve(wallet.publicKey, docPDA), wallet)
       .then((data) => {
         console.log('approve txn: ', data);
         alert('Transaction sent: ' + data + '. Please wait for confirmation.');
+        setLoading(false);
+        setRCounter(rCounter + 1);
       })
       .catch((e) => {
         console.error('approve: ', e);
+        setLoading(false);
         alert('Error approving document. Please try again.');
       });
   };
   const reject = async (docPDA) => {
+    setLoading(true);
     sendTxn(connection, await sdk.reject(wallet.publicKey, docPDA), wallet)
       .then((data) => {
         console.log('approve txn: ', data);
         alert('Transaction sent: ' + data + '. Please wait for confirmation.');
+        setLoading(false);
+        setRCounter(rCounter + 1);
       })
       .catch((e) => {
         console.error('approve: ', e);
+        setLoading(false);
         alert('Error approving document. Please try again.');
       });
   };
@@ -87,12 +97,14 @@ const SignatureList = () => {
     };
     setLoading(true);
     getList();
-  }, [wallet, offset]);
+  }, [wallet, offset, rCounter]);
   return (
     <div>
       {loading ? (
         wallet ? (
-          <div>Loading...</div>
+          <div>
+            <Loading />
+          </div>
         ) : (
           <div>Please connect wallet</div>
         )
@@ -153,7 +165,6 @@ const SignatureList = () => {
                                 <button
                                   className='p-2 border-green-500 mr-2'
                                   onClick={() => {
-                                    console.log('sig: ', sig);
                                     agree(sig.doc);
                                   }}
                                 >

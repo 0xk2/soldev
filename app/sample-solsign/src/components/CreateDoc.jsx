@@ -4,7 +4,7 @@ import sdk from '../sdk';
 import { PublicKey } from '@solana/web3.js';
 import sendTxn from '../funcs/sendTxn';
 // eslint-disable-next-line react/prop-types
-const CreateDoc = ({ showModal, onClose }) => {
+const CreateDoc = ({ showModal, onClose, successCallback }) => {
   const [signers, setSigners] = useState([]);
   const [uri, setUri] = useState('');
   const [newSigner, setNewSigner] = useState('');
@@ -108,6 +108,9 @@ const CreateDoc = ({ showModal, onClose }) => {
                       sendTxn(connection, result.transaction, wallet)
                         .then(() => {
                           alert('Document created successfully');
+                          if (successCallback) {
+                            successCallback();
+                          }
                         })
                         .catch((e) => {
                           console.log(e);

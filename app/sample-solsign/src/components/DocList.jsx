@@ -3,6 +3,7 @@ import ProfileContext from '../context/Profile';
 import sdk from '../sdk';
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
 import sendTxn from '../funcs/sendTxn';
+import Loading from './Loading';
 
 const renderSignatureStatus = (status) => {
   switch (status) {
@@ -17,31 +18,44 @@ const renderSignatureStatus = (status) => {
   }
 };
 // eslint-disable-next-line react/prop-types
-const Doc = ({ doc }) => {
+const Doc = ({ doc, successCallback }) => {
   const wallet = useAnchorWallet();
   const { connection } = useConnection();
+  const [loading, setLoading] = useState(false);
   const activate = async () => {
+    setLoading(true);
     const txn = await sdk.activate(doc.publicKey, wallet.publicKey);
     sendTxn(connection, txn, wallet)
       .then((data) => {
         console.log('activate txn: ', data);
         alert('Transaction sent: ' + data + '. Please wait for confirmation.');
+        if (successCallback) {
+          successCallback();
+        }
+        setLoading(false);
       })
       .catch((e) => {
         console.error('activate: ', e);
         alert('Error activating document. Please try again.');
+        setLoading(false);
       });
   };
   const annul = async () => {
+    setLoading(true);
     const txn = await sdk.annul(doc.publicKey, wallet.publicKey);
     sendTxn(connection, txn, wallet)
       .then((data) => {
         console.log('activate txn: ', data);
         alert('Transaction sent: ' + data + '. Please wait for confirmation.');
+        if (successCallback) {
+          successCallback();
+        }
+        setLoading(false);
       })
       .catch((e) => {
         console.error('activate: ', e);
         alert('Error activating document. Please try again.');
+        setLoading(false);
       });
   };
   const renderStatus = (status) => {
@@ -77,8 +91,9 @@ const Doc = ({ doc }) => {
   };
   return (
     <div className='my-2'>
-      <div className='flex'>
-        Doc URI: {doc.uri} {renderStatus(doc.status)}
+      <div className='flex gap-2 items-center'>
+        <div>Doc URI: {doc.uri}</div>
+        {loading ? <Loading /> : renderStatus(doc.status)}
       </div>
 
       <div className='font-bold'>Signers:</div>
@@ -97,12 +112,13 @@ const Doc = ({ doc }) => {
   );
 };
 
-const DocList = () => {
+const DocList = (reloadCounter) => {
   const profile = useContext(ProfileContext);
   const [data, setData] = useState({
     loading: false,
     docs: [],
   });
+  const [rCounterFromDoc, setRCounterFromDoc] = useState(0);
   useEffect(() => {
     if (profile) {
       sdk.listDocumentByCreator(profile?.owner).then(async (pdas) => {
@@ -121,14 +137,23 @@ const DocList = () => {
         });
       });
     }
-  }, [profile]);
+  }, [profile, reloadCounter, rCounterFromDoc]);
   return (
     <div className='mt-2'>
-      {data.loading ? <div className='my-2 font-bold'>Loading ...</div> : null}
+      {data.loading ? (
+        <div className='my-2 font-bold'>
+          <Loading />
+        </div>
+      ) : null}
       {data.docs?.map((doc, key) => {
         return (
           <div key={key}>
-            <Doc doc={doc} />
+            <Doc
+              doc={doc}
+              successCallback={() => {
+                setRCounterFromDoc(rCounterFromDoc + 1);
+              }}
+            />
             {key < data.docs.length - 1 ? (
               <div className='w-full h-[1px] bg-gray-400' />
             ) : null}

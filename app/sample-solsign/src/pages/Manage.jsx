@@ -6,6 +6,7 @@ import CreateDoc from '../components/CreateDoc';
 import ProfileContext from '../context/Profile';
 import sendTxn from '../funcs/sendTxn';
 import DocList from '../components/DocList';
+import Loading from '../components/Loading';
 // fetch all documents that the person owned
 
 const Manage = () => {
@@ -16,6 +17,7 @@ const Manage = () => {
   const wallet = useAnchorWallet();
   const { connection } = useConnection();
   const profile = useContext(ProfileContext);
+  const [rCounter, setRCounter] = useState(0);
 
   const createProfile = () => {
     const uri = prompt('Enter your profile URI');
@@ -68,6 +70,9 @@ const Manage = () => {
       <CreateDoc
         showModal={showCreateDoc}
         onClose={() => setShowCreateDoc(false)}
+        successCallback={() => {
+          setRCounter(rCounter + 1);
+        }}
       />
       {wallet ? (
         <div>
@@ -78,7 +83,7 @@ const Manage = () => {
                 className='p-2 bg-gray-200 text-gray-700'
                 onClick={createProfile}
               >
-                {data.isLoadingCreateProfile ? 'Loading ...' : 'Create profile'}
+                {data.isLoadingCreateProfile ? <Loading /> : 'Create profile'}
               </button>
             </div>
           ) : (
@@ -94,7 +99,7 @@ const Manage = () => {
                 </button>
               </div>
               <div className='pt-2'>
-                <DocList />
+                <DocList reloadCounter={rCounter} />
               </div>
             </div>
           )}
